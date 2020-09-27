@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+    forum:
+        build: . 
+        ports: 
+            - "127.0.0.1:8080:80"
+        volumes:
+            - "./src:/var/www/html/"
