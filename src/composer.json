@@ -1,0 +1,9 @@
+{
+    "name": "php/forum",
+    "description": "forum in php",
+    "require": {
+        "phpmailer/phpmailer": "^6.1",
+        "steampixel/simple-php-router": "0.4.1",
+        "vlucas/phpdotenv": "^5.2"
+    }
+}
