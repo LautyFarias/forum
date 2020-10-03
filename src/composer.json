@@ -1,5 +1,5 @@
 {
-    "name": "php/forum",
+    "name": "lautyfarias/forum",
     "description": "forum in php",
     "require": {
         "phpmailer/phpmailer": "^6.1",
