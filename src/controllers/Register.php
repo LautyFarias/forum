@@ -2,52 +2,77 @@
 
 class Register extends Controller
 {
-    public static function validate_register()
+    use ValidationMixin;
+
+    private $validation;
+
+    private $email;
+    private $username;
+    private $password;
+    private $repassword;
+    private $description;
+    private $token;
+
+    public function __construct()
     {
-        $request = self::resolveRequest(['POST']);
-        $errors = [];
+        $request = self::resolve_request(['GET', 'POST']);
 
-        $email      = $request['params']['email'];
-        $username   = $request['params']['username'];
-        $password   = $request['params']['password'];
-        $repassword = $request['params']['repassword'];
-        $description = $request['params']['description'];
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email_error'] = true;
-        }
-        if (
-            !filter_var(
-                $password,
-                FILTER_VALIDATE_REGEXP,
-                ["options" => ["regexp" => "/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{8,}.*$/"]]
-            )
-        ) {
-            $errors['password_error'] = true;
-        }
-        if ($password !== $repassword) {
-            $errors['repassword_error'] = true;
-        }
-        if (!empty($errors)) {
-            self::json_response($errors, 400);
-        } else {
-            $token = self::get_token();
-            // self::send_mail($email, $username, $token);
-            $user = new User($email, $username, $password, $description, $token);
+        if ($request['method'] == 'post') {
+            $this->email       =       $request['params']['email'];
+            $this->username    =    $request['params']['username'];
+            $this->password    =    $request['params']['password'];
+            $this->repassword  =  $request['params']['repassword'];
+            $this->description = $request['params']['description'];
+        } elseif ($request['method'] == 'get') {
+            $this->token = $request['params']['get'];
         }
     }
 
-    private static function get_token()
+    public function validate_register()
+    {
+        $this->validate_email($this->email);
+        $this->validate_repassword($this->password, $this->repassword);
+
+        if ($this->data_is_valid()) {
+            $this->token = $this->get_token();
+            $this->send_mail();
+            $user = new User(
+                $this->email,
+                $this->username,
+                $this->password,
+                $this->description,
+                $this->token
+            );
+            $user->create();
+            self::json_response(true, 200);
+        } else {
+            self::json_response($this->validation, 400);
+        }
+    }
+
+    private function get_token()
     {
         return substr(md5(openssl_random_pseudo_bytes(20)), -20);
     }
 
-    private static function send_mail(string $email, string $username, $token)
+    private function send_mail()
     {
         $message = '
-                Acceda a este <a href="' . $_SERVER['HTTP_HOST'] . '/register/validate?token=' . $token . '" style="color: #1a237e;">link</a> para activar su cuenta';
+                Acceda a este <a href="' . $_SERVER['HTTP_HOST'] . '/register/validate?token=' . $this->token . '" style="color: #1a237e;">link</a> para activar su cuenta.
+                Si no puede visualizar el link. Copie y pegue la siguiente dirección de enlace en su barra de direcciones: ' . $_SERVER['HTTP_HOST'] . '/register/validate?token=' . $this->token;
         $subject = "Complete Register!";
-        $mail = new Mail($message, $subject, $email, $username);
-        $response = $mail->send();
+        $mail = new Mail($message, $subject, $this->email, $this->username);
+        $mail->send();
+    }
+
+    public function validate_account()
+    {
+        $user = new User();
+        $user->get(['token' => $this->token]);
+
+        if (!$user->is_active()) {
+            $user->activate();
+            header('location: /login');
+        }
     }
 }

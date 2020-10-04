@@ -20,7 +20,7 @@ class Conection
         }
     }
 
-    public function query_execute($sql, $options = array())
+    public function query_execute(string $sql, array $options = array())
     {
         try {
             $sth = $this->conection->prepare($sql);
@@ -29,7 +29,8 @@ class Conection
             $sth->closeCursor();
             return $res;
         } catch (\Throwable $th) {
-            return $th;
+            http_response_code(500);
+            return false;
         }
     }
 }

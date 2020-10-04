@@ -1,4 +1,5 @@
 <?php
+
 class Controller
 {
     public static function render($view, $context = array())
@@ -28,13 +29,13 @@ class Controller
         ), true);
     }
 
-    protected static function resolveRequest(array $allowed_methods = ['GET'])
+    protected static function resolve_request(array $allowed_methods = ['GET'])
     {
         $request_method = $_SERVER['REQUEST_METHOD'];
 
         if (in_array($request_method, $allowed_methods)) {
             $request_type = strtolower($request_method);
-            $getRequestData = function () {
+            $get_request_data = function () {
                 $params = [];
                 $data = fopen("php://input", "r");
                 $str = urldecode(stream_get_contents($data));
@@ -45,7 +46,7 @@ class Controller
                 }
                 return $params;
             };
-            $getPostData = function () {
+            $get_post_data = function () {
                 $params = null;
                 if (
                     isset($_SERVER['CONTENT_TYPE'])
@@ -63,13 +64,13 @@ class Controller
                     return ["params" => $_GET, "method" => $request_type];
                     break;
                 case 'post':
-                    return ["params" => $getPostData(), "method" => $request_type];
+                    return ["params" => $get_post_data(), "method" => $request_type];
                     break;
                 case 'put':
-                    return ["params" => $getRequestData(), "method" => $request_type];
+                    return ["params" => $get_request_data(), "method" => $request_type];
                     break;
                 case 'delete':
-                    return ["params" => $getRequestData(), "method" => $request_type];
+                    return ["params" => $get_request_data(), "method" => $request_type];
                     break;
                 default:
                     return http_response_code(405);

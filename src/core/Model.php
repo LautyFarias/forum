@@ -2,12 +2,15 @@
 
 class Model
 {
-    public static function get_conection()
+    private $table;
+
+    private function get_conection()
     {
+        $this->table = get_called_class();
         return new Conection();
     }
 
-    public static function get_pid()
+    protected function get_pid()
     {
         $data = random_bytes(16);
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
@@ -15,31 +18,80 @@ class Model
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
-    public static function create_object(array $fields_data)
+    protected function create_object(array $fields_data)
     {
         foreach ($fields_data as $field => $field_value) {
-            $fields_names[]              =       $field;             
+            $fields_names[]              =       $field;
             $drive_options[':' . $field] = $field_value;
         }
         $fields_names_string =       implode(',', $fields_names);
         $fields_ids          = ':' . implode(',:', $fields_names);
         try {
-            $conection = self::get_conection();
-            $data      = $conection->query_execute(
-                "INSERT INTO " . get_called_class() .
+            $conection = $this->get_conection();
+            $res = $conection->query_execute(
+                "INSERT INTO " . $this->table .
                     "(" . $fields_names_string . ") VALUES (" . $fields_ids . ")",
                 $drive_options
             );
-            return $data;
+            return $res;
         } catch (\Throwable $th) {
-            die($th);
+            http_response_code(500);
+            return false;
         }
     }
 
-    // public static function get_object($pid)
-    // {
-    //     $conection = self::get_conection();
-    //     $obj = $conection->query("SELECT * FROM " . self::class);
-    //     return $obj;
-    // }
+    protected function get_object(array $field)
+    {
+        $where_data = $this->get_condition($field);
+        $conection  = $this->get_conection();
+        $obj = $conection->query_execute(
+            "SELECT * FROM " . $this->table . " WHERE " . $where_data['condition'],
+            $where_data['drive_options']
+        );
+        return $obj;
+    }
+
+    private function get_condition(array $fields)
+    {
+        foreach ($fields as $field => $field_value) {
+            $where_data[]                = $field . '=:' . $field;
+            $drive_options[':' . $field] = $field_value;
+        }
+        $where_data_string = implode(' and ', $where_data);
+        return [
+            "condition"     => $where_data_string,
+            "drive_options" => $drive_options
+        ];
+    }
+
+    protected function update_object(array $field, array $options = [])
+    {
+        $where_data            = $this->get_condition($options);
+        $fields_to_update_data = $this->get_update_data($field);
+        $conection             = $this->get_conection();
+
+        $drive_options = array_merge(
+            $fields_to_update_data['drive_options'],
+            $where_data['drive_options']
+        );
+        $res = $conection->query_execute(
+            "UPDATE " . $this->table . " SET " . $fields_to_update_data['update_set']
+                . " WHERE " . $where_data['condition'],
+            $drive_options
+        );
+        return $res;
+    }
+
+    private function get_update_data(array $fields)
+    {
+        foreach ($fields as $field => $field_value) {
+            $update_set[]                = $field . '=:' . $field;
+            $drive_options[':' . $field] = $field_value;
+        }
+        $update_set_string = implode(',', $update_set);
+        return [
+            "update_set"    => $update_set_string,
+            "drive_options" => $drive_options
+        ];
+    }
 }

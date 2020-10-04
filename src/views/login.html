@@ -5,18 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SevenChannel</title>
+    <link rel="stylesheet" href="../public/css/loader.css">
 </head>
 
 <body>
+    <div id="background" class="deactive"></div>
     <h1>Welcome</h1>
-    <form>
+    <form id="login-form">
         <label>Mail:</label>
-        <input type="text" name="email">
+        <input type="text" id="email-input" name="email">
         <label>Password:</label>
-        <input type="text" name="password">
-        <button>Login</button>
+        <input type="text" id="password-input" name="password">
+        <button id="submit-button">Login</button>
     </form>
     <a href="/register">Are you not registered?</a>
+    <script src="../public/js/login.js"></script>
 </body>
 
 </html>
