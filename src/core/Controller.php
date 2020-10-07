@@ -2,9 +2,11 @@
 
 class Controller
 {
-    public static function render($view, $context = array())
+    private static $view = 'not_found.html';
+
+    public static function render($context = array())
     {
-        require_once VIEWS_ROOT . '/' . $view;
+        require_once VIEWS_ROOT . '/' . get_called_class()::$view;
     }
 
     protected static function json_response($response = null, int $code = 200)

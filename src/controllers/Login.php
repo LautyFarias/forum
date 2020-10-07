@@ -2,9 +2,11 @@
 
 class Login extends Controller
 {
-    use ValidationMixin;
+    use Validation;
 
     private $validation;
+
+    protected static $view = 'login.html';
 
     private $email;
     private $password;
@@ -27,6 +29,7 @@ class Login extends Controller
                 ["email" => $this->email, "password" => $this->password]
             );
             if ($user->is_active()) {
+                $_SESSION['user'] = $user;
                 self::json_response(true, 200);
             }
         }

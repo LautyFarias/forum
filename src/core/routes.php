@@ -3,7 +3,7 @@
 use Steampixel\Route;
 
 Route::add('/login', function () {
-    Login::render('login.html');
+    Login::render();
 });
 Route::add('/login', function () {
     $login = new Login();
@@ -11,7 +11,7 @@ Route::add('/login', function () {
 }, 'POST');
 
 Route::add('/register', function () {
-    Register::render('register.html');
+    Register::render();
 });
 Route::add('/register', function () {
     $register = new Register();
@@ -22,10 +22,22 @@ Route::add('/register/validate', function () {
     $register->validate_account();
 });
 
+Route::add('/thread/create', function () {
+    ThreadForm::render();
+});
+Route::add('/thread/create', function () {
+    // $thread_creation = new ThreadCreation();
+}, 'POST');
+
+Route::add('/profile/me', function () {
+    $profile = new Profile();
+    Profile::render($profile->get_context());
+});
+
 Route::add('/', function () {
-    $main = new Main($_SESSION['User']);
+    $main = new Main();
 });
 
 Route::pathNotFound(function () {
-    echo "Not found";
+    Controller::render();
 });

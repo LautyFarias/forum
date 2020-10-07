@@ -2,9 +2,11 @@
 
 class Register extends Controller
 {
-    use ValidationMixin;
+    use Validation;
 
     private $validation;
+
+    protected static $view = 'register.html';
 
     private $email;
     private $username;

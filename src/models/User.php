@@ -56,15 +56,35 @@ class User extends Model
         $this->description = $user_data['description'];
         $this->token       = $user_data['token'];
         $this->is_active   = $user_data['is_active'];
-        
-        return $user_data;
     }
 
-    public function is_active(){
+    public function pid()
+    {
+        return $this->pid;
+    }
+
+    public function email()
+    {
+        return $this->email;
+    }
+
+    public function username()
+    {
+        return $this->username;
+    }
+
+    public function description()
+    {
+        return $this->description;
+    }
+
+    public function is_active()
+    {
         return $this->is_active;
     }
 
-    public function activate(){
+    public function activate()
+    {
         return $this->update_object(
             ['is_active' => true, 'token' => '-'],
             ['pid' => $this->pid]

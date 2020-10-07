@@ -1,6 +1,6 @@
 <?php
 
-trait ValidationMixin
+trait Validation
 {
     protected function validate_email(string $email)
     {
