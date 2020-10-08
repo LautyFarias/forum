@@ -2,6 +2,7 @@
 
 class User extends Model
 {
+    private $id;
     private $pid;
     private $email;
     private $username;
@@ -49,6 +50,7 @@ class User extends Model
     {
         $user_data = $this->get_object($field);
 
+        $this->id          = $user_data['id'];
         $this->pid         = $user_data['pid'];
         $this->email       = $user_data['email'];
         $this->username    = $user_data['username'];
@@ -56,6 +58,11 @@ class User extends Model
         $this->description = $user_data['description'];
         $this->token       = $user_data['token'];
         $this->is_active   = $user_data['is_active'];
+    }
+
+    public function id()
+    {
+        return $this->id;
     }
 
     public function pid()

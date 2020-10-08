@@ -26,7 +26,7 @@ Route::add('/thread/create', function () {
     ThreadForm::render();
 });
 Route::add('/thread/create', function () {
-    // $thread_creation = new ThreadCreation();
+    $thread_form = new ThreadForm();
 }, 'POST');
 
 Route::add('/profile/me', function () {

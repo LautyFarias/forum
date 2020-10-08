@@ -8,7 +8,7 @@ $submitButton.onclick = event => {
     event.preventDefault();
     toggleLoader();
     const title = document.getElementById("title-input").value,       
-        description = document.getElementById("description-input").value;
+        discussion = document.getElementById("discussion-input").value;
     fetch("/thread/create", {
         headers: {
             'Content-Type': 'application/json'
@@ -16,7 +16,7 @@ $submitButton.onclick = event => {
         method: 'POST',
         body: JSON.stringify({
             "title": title,
-            "description": description
+            "discussion": discussion
         })
     })
         .then(res => res.json())
