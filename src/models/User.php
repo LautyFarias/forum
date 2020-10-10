@@ -50,14 +50,14 @@ class User extends Model
     {
         $user_data = $this->get_object($field);
 
-        $this->id          = $user_data['id'];
-        $this->pid         = $user_data['pid'];
-        $this->email       = $user_data['email'];
-        $this->username    = $user_data['username'];
-        $this->password    = $user_data['password'];
-        $this->description = $user_data['description'];
-        $this->token       = $user_data['token'];
-        $this->is_active   = $user_data['is_active'];
+        $this->id          = $user_data[0]['id'];
+        $this->pid         = $user_data[0]['pid'];
+        $this->email       = $user_data[0]['email'];
+        $this->username    = $user_data[0]['username'];
+        $this->password    = $user_data[0]['password'];
+        $this->description = $user_data[0]['description'];
+        $this->token       = $user_data[0]['token'];
+        $this->is_active   = $user_data[0]['is_active'];
     }
 
     public function id()

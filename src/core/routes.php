@@ -22,11 +22,27 @@ Route::add('/register/validate', function () {
     $register->validate_account();
 });
 
+Route::add(
+    '/thread/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b',
+    function () {
+        $thread_retrieve = new ThreadRetrieve();
+        $thread_retrieve->render($thread_retrieve->get_context());
+    }
+);
+Route::add(
+    '/thread/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b',
+    function () {
+        $thread_retrieve = new ThreadRetrieve();
+
+    },
+    'POST'
+);
+
 Route::add('/thread/create', function () {
     ThreadForm::render();
 });
 Route::add('/thread/create', function () {
-    $thread_form = new ThreadForm();
+    new ThreadForm();
 }, 'POST');
 
 Route::add('/profile/me', function () {
@@ -36,6 +52,7 @@ Route::add('/profile/me', function () {
 
 Route::add('/', function () {
     $main = new Main();
+    $main->render($main->get_context());
 });
 
 Route::pathNotFound(function () {

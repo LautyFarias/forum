@@ -8,6 +8,7 @@
 </head>
 
 <body>
+    <div id="background" class="deactive"></div>
     <div class="container">
         <header class="image-container">
             <div>
@@ -29,24 +30,25 @@
             <div class="row">
                 <a href="/thread/create"><i></i></a>
             </div>
-            <div class="row">
+            <?php foreach ($context['threads'] as $thread): ?>
+            <div class="row" id="thread/<?php echo $thread['pid'] ?>">
                 <div class="column">
                     <div class="main-image">
                         <img src="" alt="">
                     </div>
-                    <div class="id-container">
-                        <p>#Id</p>
-                    </div>
+                    <!-- <div class="id-container">
+                        <p><?php //echo $thread['pid']; ?></p>
+                    </div> -->
                     <div class="header-container">
                         <div>
-                            <h3>Title</h3>
+                            <h3><?php echo $thread['title']; ?></h3>
                         </div>
                         <div>
-                            <h3>Autor</h3>
+                            <h3><?php echo $thread['user']; ?></h3>
                         </div>
                     </div>
-                    <div class="description-container">
-                        Description
+                    <div class="discussion-container">
+                        <?php echo $thread['discussion']; ?>
                     </div>
                     <div class="theme-container">
                         Themes
@@ -54,18 +56,20 @@
                     <div class="valoration-container">
                         <div class="likes-container">
                             <i>Icon</i>
-                            <p>Number</p>
+                            <p><?php echo $thread['likes']; ?></p>
                         </div>
                         <div class="dislikes-container">
                             <i>Icon</i>
-                            <p>Number</p>
+                            <p><?php echo $thread['dislikes']; ?></p>
                         </div>
                     </div>
                 </div>
                 <div class="column"></div>
             </div>
+            <?php endforeach; ?>
         </section>
     </div>
+    <script src="../public/js/thread-retrieve.js"></script>
 </body>
 
 </html>

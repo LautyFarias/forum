@@ -25,7 +25,7 @@ class Conection
         try {
             $sth = $this->conection->prepare($sql);
             $sth->execute($options);
-            $res = $sth->fetch(PDO::FETCH_ASSOC);
+            $res = $sth->fetchAll(PDO::FETCH_ASSOC);
             $sth->closeCursor();
             return $res;
         } catch (\Throwable $th) {

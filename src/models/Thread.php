@@ -2,6 +2,7 @@
 
 class Thread extends Model
 {
+    private $id;
     private $pid;
     private $title;
     private $discussion;
@@ -39,14 +40,21 @@ class Thread extends Model
         $thread_data = $this->get_object($field);
 
         $user = new User();
+        $user->get(["id" => $thread_data[0]['user_id']]);
 
-        $this->pid        = $thread_data['pid'];
-        $this->title      = $thread_data['title'];
-        $this->discussion = $thread_data['discussion'];
-        $this->user       = $user->get(["id" => $thread_data['user_id']]);
-        $this->likes      = $thread_data['likes'];
-        $this->dislikes   = $thread_data['dislikes'];
-        $this->date       = $thread_data['date'];
+        $this->id         = $thread_data[0]['id'];
+        $this->pid        = $thread_data[0]['pid'];
+        $this->title      = $thread_data[0]['title'];
+        $this->discussion = $thread_data[0]['discussion'];
+        $this->user       = $user;
+        $this->likes      = $thread_data[0]['likes'];
+        $this->dislikes   = $thread_data[0]['dislikes'];
+        $this->date       = $thread_data[0]['date'];
+    }
+
+    public function id()
+    {
+        return $this->id;
     }
 
     public function pid()
@@ -62,6 +70,11 @@ class Thread extends Model
     public function discussion()
     {
         return $this->discussion;
+    }
+
+    public function user()
+    {
+        return $this->user;
     }
 
     public function likes()

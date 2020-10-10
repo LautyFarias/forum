@@ -94,4 +94,13 @@ class Model
             "drive_options" => $drive_options
         ];
     }
+
+    public function get_objects()
+    {
+        $conection  = $this->get_conection();
+        $objs = $conection->query_execute(
+            "SELECT * FROM " . $this->table
+        );
+        return $objs;
+    }
 }
