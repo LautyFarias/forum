@@ -27,7 +27,8 @@ class Main extends Controller{
                 "discussion" => $column['discussion'],
                 "user"       => $user->username(),
                 "likes"      => $column['likes'],
-                "dislikes"   => $column['dislikes']    
+                "dislikes"   => $column['dislikes'],
+                "date"       => $column['date']     
             ];
         }
         

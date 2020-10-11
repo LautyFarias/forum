@@ -52,6 +52,12 @@ class Thread extends Model
         $this->date       = $thread_data[0]['date'];
     }
 
+    public function filter(array $field): array
+    {
+        $thread_data = $this->get_object($field);
+        return $thread_data;
+    }
+
     public function id()
     {
         return $this->id;
@@ -75,6 +81,11 @@ class Thread extends Model
     public function user()
     {
         return $this->user;
+    }
+
+    public function date()
+    {
+        return $this->date;
     }
 
     public function likes()

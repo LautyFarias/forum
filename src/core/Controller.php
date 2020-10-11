@@ -2,7 +2,7 @@
 
 class Controller
 {
-    private static $view = 'not_found.html';
+    private static $view = 'not_found.php';
 
     public static function render($context = array())
     {

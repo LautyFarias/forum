@@ -10,6 +10,19 @@ trait Validation
         return $this->validation['email'] = FALSE;
     }
 
+    protected function verify_repeat_email(string $email)
+    {
+        $user = new User();
+        $rows = $user->select("email");
+
+        foreach ($rows as $row => $field) {
+            if ($email == $field['email']) {
+                return $this->validation['email'] = FALSE;
+            }
+        }
+        return $this->validation['email'] = TRUE;
+    }
+
     protected function validate_password(string $password)
     {
         if (
@@ -36,6 +49,48 @@ trait Validation
             return $this->validation['password'] = FALSE;
         }
         return $this->validation['password'] = FALSE;
+    }
+
+    protected function validate_username($username)
+    {
+        if (
+            filter_var(
+                $username,
+                FILTER_VALIDATE_REGEXP,
+                ["options" => ["regexp" => "/^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/"]]
+            )
+        ) {
+            return $this->validation['username'] = TRUE;
+        }
+        return $this->validation['username'] = FALSE;
+    }
+
+    protected function validate_description($description)
+    {
+        if (
+            filter_var(
+                $description,
+                FILTER_VALIDATE_REGEXP,
+                ["options" => ["regexp" => "/^(.|\s)*[a-zA-Z]+(.|\s)*$/"]]
+            )
+        ) {
+            return $this->validation['description'] = TRUE;
+        }
+        return $this->validation['description'] = FALSE;
+    }
+
+    protected function validate_discussion($discussion)
+    {
+        if (
+            filter_var(
+                $discussion,
+                FILTER_VALIDATE_REGEXP,
+                ["options" => ["regexp" => "/^(.|\s)*[a-zA-Z]+(.|\s)*$/"]]
+            )
+        ) {
+            return $this->validation['title or discussion'] = TRUE;
+        }
+        return $this->validation['title or discussion'] = FALSE;
     }
 
     protected function data_is_valid(): bool

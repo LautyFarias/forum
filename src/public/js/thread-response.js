@@ -1,3 +1,4 @@
+(()=>{
 const $responseInput = document.getElementById("response-input"),
     $threadsDiv = document.querySelector('[id^=thread]'),
     $background = document.getElementById("background"),
@@ -6,13 +7,11 @@ const $responseInput = document.getElementById("response-input"),
         $background.classList.toggle("active");
     };
 $responseInput.onkeydown = event => {
-    if (event.keyCode === 13) {
+    if (event.code === "Enter") {
         toggleLoader();
         const response = $responseInput.value;
-        let id = $threadsDiv.id.split('/'),
-            pid = id[1],
-            url = 'thread/' + pid;
-        fetch(url, {
+        let id = $threadsDiv.id;
+        fetch('/' + id, {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -21,11 +20,13 @@ $responseInput.onkeydown = event => {
                 "response": response
             })
         })
-            .then(res => res.json())
-            .then(res => console.log(res))
+            .then(res => res.text())
+            .then(res => location.reload())
             .catch(err => console.log(err))
             .finally(() => {
                 toggleLoader();
+                $responseInput.value = '';
             });
     }
 };
+})();

@@ -9,6 +9,9 @@ Route::add('/login', function () {
     $login = new Login();
     $login->validate_login();
 }, 'POST');
+Route::add('/logout', function () {
+    Login::logout();
+});
 
 Route::add('/register', function () {
     Register::render();
@@ -33,14 +36,11 @@ Route::add(
     '/thread/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b',
     function () {
         $thread_retrieve = new ThreadRetrieve();
-
+        $thread_retrieve->set_response();
     },
     'POST'
 );
 
-Route::add('/thread/create', function () {
-    ThreadForm::render();
-});
 Route::add('/thread/create', function () {
     new ThreadForm();
 }, 'POST');
@@ -49,6 +49,13 @@ Route::add('/profile/me', function () {
     $profile = new Profile();
     Profile::render($profile->get_context());
 });
+Route::add(
+    '/profile/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b',
+    function () {
+        $profile = new Profile();
+        $profile->render($profile->get_context());
+    }
+);
 
 Route::add('/', function () {
     $main = new Main();

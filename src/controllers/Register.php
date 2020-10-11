@@ -6,7 +6,7 @@ class Register extends Controller
 
     private $validation;
 
-    protected static $view = 'register.html';
+    protected static $view = 'register.php';
 
     private $email;
     private $username;
@@ -24,16 +24,23 @@ class Register extends Controller
             $this->username    =    $request['params']['username'];
             $this->password    =    $request['params']['password'];
             $this->repassword  =  $request['params']['repassword'];
-            $this->description = $request['params']['description'];
+            $this->description = !empty($request['params']['description']) ? $request['params']['description'] : "I do not have a description";
         } elseif ($request['method'] == 'get') {
-            $this->token = $request['params']['get'];
+            $this->token = $request['params']['token'];
         }
     }
 
     public function validate_register()
     {
         $this->validate_email($this->email);
+        if ($this->validation['email'] == true){
+            $this->verify_repeat_email($this->email);
+        }
+        
         $this->validate_repassword($this->password, $this->repassword);
+
+        $this->validate_username($this->username);
+        $this->validate_description($this->description);
 
         if ($this->data_is_valid()) {
             $this->token = $this->get_token();

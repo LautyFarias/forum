@@ -64,7 +64,7 @@ class Model
         ];
     }
 
-    protected function update_object(array $field, array $options = [])
+    public function update_object(array $field, array $options = [])
     {
         $where_data            = $this->get_condition($options);
         $fields_to_update_data = $this->get_update_data($field);
@@ -102,5 +102,24 @@ class Model
             "SELECT * FROM " . $this->table
         );
         return $objs;
+    }
+
+    protected function get_field(string $field, $condition)
+    {
+        $conection  = $this->get_conection();
+        if (is_null($condition)) {
+            $obj = $conection->query_execute(
+                "SELECT " . $field .  " FROM " . $this->table
+            );
+            return $obj;
+        }
+
+        $where_data = $this->get_condition($condition);
+        $obj = $conection->query_execute(
+            "SELECT" . $field . "FROM " . $this->table
+            . " WHERE " . $where_data['condition'],
+            $where_data['drive_options']
+        );
+        return $obj;
     }
 }

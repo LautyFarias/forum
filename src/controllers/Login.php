@@ -6,7 +6,7 @@ class Login extends Controller
 
     private $validation;
 
-    protected static $view = 'login.html';
+    protected static $view = 'login.php';
 
     private $email;
     private $password;
@@ -30,8 +30,16 @@ class Login extends Controller
             );
             if ($user->is_active()) {
                 $_SESSION['user'] = $user;
-                self::json_response(true, 200);
+                $this->json_response(true, 200);
             }
+        } else {
+            $this->json_response(false, 400);
         }
+    }
+
+    public function logout()
+    {
+        unset($_SESSION['user']);
+        header('location: /login');
     }
 }

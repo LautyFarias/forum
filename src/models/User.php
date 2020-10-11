@@ -60,6 +60,11 @@ class User extends Model
         $this->is_active   = $user_data[0]['is_active'];
     }
 
+    public function select(string $field, array $condition = null)
+    {
+        return $this->get_field($field, $condition);
+    }
+
     public function id()
     {
         return $this->id;
